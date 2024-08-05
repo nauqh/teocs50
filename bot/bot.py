@@ -29,16 +29,17 @@ async def on_starting(event: hikari.StartingEvent) -> None:
 
 async def check_threads(
     guild: int,
+    forum_channel: int,
     staff_channel: int,
     mentor_role=1233260164233297941
 ):
-    CHECK_INTERVAL = 5
+    CHECK_INTERVAL = 2000
     while True:
         await asyncio.sleep(CHECK_INTERVAL)
         threads = [
             thread for thread in await app.rest.fetch_active_threads(guild)
             if isinstance(thread, hikari.GuildThreadChannel) and
-            thread.parent_id == 1236960058173161533 and
+            thread.parent_id == int(forum_channel) and
             thread.created_at.date() in [today(), yesterday()]
         ]
         for thread in threads:
@@ -67,7 +68,12 @@ async def check_threads(
 @app.listen(hikari.StartedEvent)
 async def on_started(event: hikari.StartedEvent) -> None:
     asyncio.create_task(
-        check_threads(1233260164233297940, os.environ['STAFF_CHANNEL'])
+        check_threads(os.environ['GUILD_ID'],
+                      os.environ['FORUM_CHANNEL1'], os.environ['STAFF_CHANNEL'])
+    )
+    asyncio.create_task(
+        check_threads(os.environ['GUILD_ID'],
+                      os.environ['FORUM_CHANNEL2'], os.environ['STAFF_CHANNEL'])
     )
 
 
