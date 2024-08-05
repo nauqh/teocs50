@@ -1,0 +1,9 @@
+hikari
+hikari-lightbulb
+hikari-miru
+python-dotenv
+pandas
+requests
+apscheduler
+beautifulsoup4
+bs4
